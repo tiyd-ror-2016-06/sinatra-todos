@@ -16,9 +16,11 @@ class TodoAppTests < Minitest::Test
     TodoApp
   end
 
-  def test_starts_with_empty_list
+  def setup
     TodoApp::DB.clear
-    
+  end
+
+  def test_starts_with_empty_list
     response = get "/list"
 
     assert_equal 200, response.status
@@ -36,5 +38,11 @@ class TodoAppTests < Minitest::Test
     list = JSON.parse response.body
     assert_equal 2, list.count
     assert_equal "groceries", list.first["title"]
+  end
+
+  def test_add_response
+    response = post "/list", '{"title": "do things"}'
+    assert_equal 200, response.status
+    assert_equal "ok", response.body
   end
 end

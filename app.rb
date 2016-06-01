@@ -12,6 +12,7 @@ class TodoApp < Sinatra::Base
   post "/list" do
     new_item = JSON.parse request.body.read
     DB.push new_item
+    body "ok"
   end
 end
 
