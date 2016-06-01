@@ -23,7 +23,11 @@ class TodoAppTests < Minitest::Test
     assert_equal "[]", response.body
   end
 
-  def test_can_see_list
+  focus
+  def test_can_add_to_list
+    post "/list", '{"title": "groceries"}'
+    post "/list", '{"title": "learn ruby"}'
+
     response = get "/list"
 
     assert_equal 200, response.status
