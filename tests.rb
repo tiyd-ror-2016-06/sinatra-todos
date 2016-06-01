@@ -16,13 +16,11 @@ class TodoAppTests < Minitest::Test
     TodoApp
   end
 
-  focus
   def test_starts_with_empty_list
     response = get "/list"
 
     assert_equal 200, response.status
     assert_equal "[]", response.body
-
   end
 
   def test_can_see_list
