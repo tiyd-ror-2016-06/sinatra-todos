@@ -27,6 +27,17 @@ class TodoApp < Sinatra::Base
       body "No title"
     end
   end
+
+  patch "/list" do
+    title = params[:title]
+    existing_item = DB.find { |i| i["title"] == title }
+    if existing_item
+      DB.delete existing_item
+      status 200
+    else
+      status 404
+    end
+  end
 end
 
 # if $0 == __FILE__

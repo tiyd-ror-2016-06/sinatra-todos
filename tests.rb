@@ -57,4 +57,16 @@ class TodoAppTests < Minitest::Test
     assert_equal 400, response.status
     assert_equal "Can't parse json: 'not json'", response.body
   end
+
+  def test_can_mark_items_complete
+    post "/list", '{"title": "groceries"}'
+    post "/list", '{"title": "learn ruby"}'
+
+    response = patch "/list", title: "learn ruby"
+    assert_equal 200, response.status
+
+    response = get "/list"
+    json = JSON.parse response.body
+    assert_equal 1, json.count
+  end
 end
