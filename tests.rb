@@ -45,4 +45,16 @@ class TodoAppTests < Minitest::Test
     assert_equal 200, response.status
     assert_equal "ok", response.body
   end
+
+  def test_requires_title
+    response = post "/list", '{}'
+    assert_equal 422, response.status
+    assert_equal "No title", response.body
+  end
+
+  def test_handles_bad_json
+    response = post "/list", 'not json'
+    assert_equal 400, response.status
+    assert_equal "Can't parse json: 'not json'", response.body
+  end
 end

@@ -10,9 +10,22 @@ class TodoApp < Sinatra::Base
   end
 
   post "/list" do
-    new_item = JSON.parse request.body.read
-    DB.push new_item
-    body "ok"
+    body = request.body.read
+
+    begin
+      new_item = JSON.parse body
+    rescue
+      status 400
+      halt "Can't parse json: '#{body}'"
+    end
+
+    if new_item["title"]
+      DB.push new_item
+      body "ok"
+    else
+      status 422
+      body "No title"
+    end
   end
 end
 
