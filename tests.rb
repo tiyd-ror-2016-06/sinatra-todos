@@ -17,13 +17,14 @@ class TodoAppTests < Minitest::Test
   end
 
   def test_starts_with_empty_list
+    TodoApp::DB.clear
+    
     response = get "/list"
 
     assert_equal 200, response.status
     assert_equal "[]", response.body
   end
 
-  focus
   def test_can_add_to_list
     post "/list", '{"title": "groceries"}'
     post "/list", '{"title": "learn ruby"}'

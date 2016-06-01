@@ -3,18 +3,15 @@ require 'sinatra/json'
 require 'json'
 
 class TodoApp < Sinatra::Base
-  def initialize
-    super
-    @list = []
-  end
+  DB = []
 
   get "/list" do
-    json @list
+    json DB
   end
 
   post "/list" do
     new_item = JSON.parse request.body.read
-    @list.push new_item
+    DB.push new_item
   end
 end
 
