@@ -4,19 +4,21 @@ require 'json'
 
 class TodoApp < Sinatra::Base
   set :logging, true
-  set :show_errors, false
+  set :show_exceptions, false
   error do |e|
     binding.pry
+    raise e
   end
 
-  DB = []
+  DB = {}
 
   before do
     require_authorization!
   end
 
   get "/list" do
-    json DB
+    DB[username] ||= []
+    json DB[username]
   end
 
   post "/list" do
@@ -30,7 +32,8 @@ class TodoApp < Sinatra::Base
     end
 
     if new_item["title"]
-      DB.push new_item
+      DB[username] ||= []
+      DB[username].push new_item
       body "ok"
     else
       status 422
@@ -40,9 +43,10 @@ class TodoApp < Sinatra::Base
 
   patch "/list" do
     title = params[:title]
-    existing_item = DB.find { |i| i["title"] == title }
+    DB[username] ||= []
+    existing_item = DB[username].find { |i| i["title"] == title }
     if existing_item
-      DB.delete existing_item
+      DB[username].delete existing_item
       status 200
     else
       status 404
@@ -50,11 +54,14 @@ class TodoApp < Sinatra::Base
   end
 
   def require_authorization!
-    username = request.env["HTTP_AUTHORIZATION"]
     unless username
       status 401
       halt({ error: "You must log in" }.to_json)
     end
+  end
+
+  def username
+    request.env["HTTP_AUTHORIZATION"]
   end
 end
 

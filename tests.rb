@@ -29,6 +29,22 @@ class NotLoggedIn < TodoAppBase
     body = JSON.parse response.body
     assert_equal "You must log in", body["error"]
   end
+
+  def test_user_lists_are_separate
+    header "Authorization", "jdabbs"
+    post "/list", '{"title": "groceries"}'
+
+    header "Authorization", "daniel"
+    post "/list", '{"title": "learn ruby"}'
+
+    header "Authorization", "jdabbs"
+    response = get "/list"
+
+    body = JSON.parse response.body
+
+    assert_equal 1, body.count
+    assert_equal "groceries", body.first["title"]
+  end
 end
 
 class LoggedIn < TodoAppBase
