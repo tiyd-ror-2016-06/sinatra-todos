@@ -12,16 +12,14 @@ class TodoApp < Sinatra::Base
   DB = []
 
   get "/list" do
-    username = request.env["HTTP_AUTHORIZATION"]
-    if username
-      json DB
-    else
-      status 401
-      json error: "You must log in"
-    end
+    require_authorization!
+
+    json DB
   end
 
   post "/list" do
+    require_authorization!
+
     body = request.body.read
 
     begin
@@ -41,6 +39,8 @@ class TodoApp < Sinatra::Base
   end
 
   patch "/list" do
+    require_authorization!
+
     title = params[:title]
     existing_item = DB.find { |i| i["title"] == title }
     if existing_item
@@ -48,6 +48,14 @@ class TodoApp < Sinatra::Base
       status 200
     else
       status 404
+    end
+  end
+
+  def require_authorization!
+    username = request.env["HTTP_AUTHORIZATION"]
+    unless username
+      status 401
+      halt({ error: "You must log in" }.to_json)
     end
   end
 end

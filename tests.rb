@@ -71,6 +71,7 @@ class TodoAppTests < Minitest::Test
     assert_equal 1, json.count
   end
 
+  focus
   def test_login_is_required
     # don't log in ...
     response = get "/list"
