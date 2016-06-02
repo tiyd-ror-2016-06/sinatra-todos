@@ -9,7 +9,7 @@ require 'rack/test'
 
 require "./app"
 
-class TodoAppTests < Minitest::Test
+class TodoAppLoggedInTests < Minitest::Test
   include Rack::Test::Methods
 
   def app
@@ -18,10 +18,10 @@ class TodoAppTests < Minitest::Test
 
   def setup
     TodoApp::DB.clear
+    header "Authorization", "jdabbs"
   end
 
   def test_starts_with_empty_list
-    header "Authorization", "jdabbs"
     response = get "/list"
 
     assert_equal 200, response.status
@@ -70,9 +70,20 @@ class TodoAppTests < Minitest::Test
     json = JSON.parse response.body
     assert_equal 1, json.count
   end
+end
+
+class TodoAppTests < Minitest::Test
+  include Rack::Test::Methods
+
+  def app
+    TodoApp
+  end
+
+  def setup
+    TodoApp::DB.clear
+  end
 
   def test_login_is_required
-    # don't log in ...
     response = get "/list"
     assert_equal 401, response.status
 
