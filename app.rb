@@ -11,15 +11,15 @@ class TodoApp < Sinatra::Base
 
   DB = []
 
-  get "/list" do
+  before do
     require_authorization!
+  end
 
+  get "/list" do
     json DB
   end
 
   post "/list" do
-    require_authorization!
-
     body = request.body.read
 
     begin
@@ -39,8 +39,6 @@ class TodoApp < Sinatra::Base
   end
 
   patch "/list" do
-    require_authorization!
-
     title = params[:title]
     existing_item = DB.find { |i| i["title"] == title }
     if existing_item
