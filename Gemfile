@@ -5,6 +5,10 @@ gem 'pry'
 gem 'sinatra', require: false
 gem 'sinatra-contrib'
 
+group :development do
+  gem 'httparty'
+end
+
 group :test do
   gem 'minitest'
   gem 'minitest-focus'

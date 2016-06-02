@@ -13,20 +13,29 @@ class MyApi
   end
 
   def list_items
-    HTTParty.get "#{url}/list",
-      headers: headers
+    make_request :get, "/list"
   end
 
   def add_new_item title
-    HTTParty.post "#{url}/list",
-      body: { title: title }.to_json,
-      headers: headers
+    make_request :post, "/list", body: { title: title }
   end
 
   def mark_complete title
-    HTTParty.patch "#{url}/list",
-      query: { title: title },
-      headers: headers
+    make_request :patch, "/list", query: { title: title }
+  end
+
+  def make_request verb, endpoint, options={}
+    options[:headers] = headers
+    # TODO: improve?
+    if options[:body].is_a?(Hash) || options[:body].is_a?(Array)
+      options[:body] = options[:body].to_json
+    end
+
+    r = HTTParty.send verb, "#{url}#{endpoint}", options
+    if r.code >= 400 && r.code < 600
+      raise "There was an error (#{r.code}) - #{r}"
+    end
+    r
   end
 end
 

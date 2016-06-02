@@ -5,6 +5,10 @@ GEM
     backports (3.6.8)
     builder (3.2.2)
     coderay (1.1.1)
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    json (1.8.3)
     method_source (0.8.2)
     minitest (5.9.0)
     minitest-focus (1.1.2)
@@ -15,6 +19,7 @@ GEM
       minitest (>= 5.0)
       ruby-progressbar
     multi_json (1.12.1)
+    multi_xml (0.5.5)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -43,6 +48,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  httparty
   minitest
   minitest-focus
   minitest-reporters
@@ -50,6 +56,9 @@ DEPENDENCIES
   rack-test
   sinatra
   sinatra-contrib
+
+RUBY VERSION
+   ruby 2.3.1p112
 
 BUNDLED WITH
    1.12.5
