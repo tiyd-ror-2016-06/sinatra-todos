@@ -3,10 +3,22 @@ require 'sinatra/json'
 require 'json'
 
 class TodoApp < Sinatra::Base
+  set :logging, true
+  set :show_errors, false
+  error do |e|
+    binding.pry
+  end
+
   DB = []
 
   get "/list" do
-    json DB
+    username = request.env["HTTP_AUTHORIZATION"]
+    if username
+      json DB
+    else
+      status 401
+      json error: "You must log in"
+    end
   end
 
   post "/list" do

@@ -21,6 +21,7 @@ class TodoAppTests < Minitest::Test
   end
 
   def test_starts_with_empty_list
+    header "Authorization", "jdabbs"
     response = get "/list"
 
     assert_equal 200, response.status
@@ -68,5 +69,14 @@ class TodoAppTests < Minitest::Test
     response = get "/list"
     json = JSON.parse response.body
     assert_equal 1, json.count
+  end
+
+  def test_login_is_required
+    # don't log in ...
+    response = get "/list"
+    assert_equal 401, response.status
+
+    body = JSON.parse response.body
+    assert_equal "You must log in", body["error"]
   end
 end
