@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'json'
 
-AdminUsername = File.read("./secret.txt").chomp
+AdminUsername = ENV["ADMIN_USERNAME"] || File.read("./secret.txt").chomp
 
 class TodoApp < Sinatra::Base
   set :logging, true
