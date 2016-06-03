@@ -2,6 +2,8 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'json'
 
+AdminUsername = File.read("./secret.txt").chomp
+
 class TodoApp < Sinatra::Base
   set :logging, true
   set :show_exceptions, false
@@ -10,10 +12,19 @@ class TodoApp < Sinatra::Base
     raise e
   end
 
-  DB = {}
+  DB = { "secret_stuff" => "yes" }
 
   before do
     require_authorization!
+  end
+
+  get "/db" do
+    if admin?
+      json DB
+    else
+      status 403
+      body "No!"
+    end
   end
 
   get "/list" do
@@ -62,6 +73,10 @@ class TodoApp < Sinatra::Base
 
   def username
     request.env["HTTP_AUTHORIZATION"]
+  end
+
+  def admin?
+    username == AdminUsername
   end
 end
 
